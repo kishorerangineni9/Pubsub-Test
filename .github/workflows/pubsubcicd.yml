@@ -1,0 +1,35 @@
+name: Auto Merge Develop to Main
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  auto-merge:
+    name: Merge develop into main
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Merge develop into main
+        run: |
+          git checkout main
+          git merge origin/develop --allow-unrelated-histories --no-ff -m "Auto-merged develop into main"
+          git push origin main
