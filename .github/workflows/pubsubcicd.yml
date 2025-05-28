@@ -11,12 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write  # Required to push changes to the main branch
-      pull-requests: write  # Required to manage PRs if needed
+      contents: write
+      pull-requests: write
 
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history
 
       - name: Set up Git
         run: |
@@ -29,5 +31,5 @@ jobs:
       - name: Merge develop into main
         run: |
           git checkout main
-          git merge origin/develop --no-ff -m "Auto-merged develop into main"
+          git merge origin/develop --allow-unrelated-histories --no-ff -m "Auto-merged develop into main"
           git push origin main
